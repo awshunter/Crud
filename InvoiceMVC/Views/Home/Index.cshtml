@@ -1,0 +1,97 @@
+﻿@model List<Invoice>
+@{
+    ViewData["Title"] = "لوحة التحكم";
+}
+
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm border">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold text-primary">مرحباً بك في نظام الفواتير</h1>
+        <p class="col-md-8 fs-4 text-muted">نظام متكامل لإدارة فواتير العملاء ومتابعة المبيعات بسهولة ويسر.</p>
+        <a class="btn btn-primary btn-lg" asp-controller="Invoices" asp-action="Create">
+            <i class="bi bi-plus-circle"></i> إنشاء فاتورة جديدة
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3 shadow h-100">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="card-title">إجمالي الفواتير</h5>
+                    <h2 class="display-4 fw-bold">@ViewBag.TotalInvoices</h2>
+                </div>
+                <i class="bi bi-receipt-cutoff" style="font-size: 4rem; opacity: 0.5;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3 shadow h-100">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="card-title">إجمالي المبيعات</h5>
+                    <h2 class="display-6 fw-bold">@(((decimal)ViewBag.TotalRevenue).ToString("C"))</h2>
+                </div>
+                <i class="bi bi-cash-coin" style="font-size: 4rem; opacity: 0.5;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3 shadow h-100">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="card-title">عدد العملاء</h5>
+                    <h2 class="display-4 fw-bold">@ViewBag.TotalClients</h2>
+                </div>
+                <i class="bi bi-people-fill" style="font-size: 4rem; opacity: 0.5;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white d-flex justify-content-between align-items-center">
+        <h6 class="m-0 fw-bold text-primary"><i class="bi bi-clock-history"></i> أحدث الفواتير المضافة</h6>
+        <a asp-controller="Invoices" asp-action="Index" class="btn btn-sm btn-outline-primary">عرض الكل</a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>رقم الفاتورة</th>
+                        <th>العميل</th>
+                        <th>التاريخ</th>
+                        <th>المبلغ</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><span class="badge bg-secondary">@item.Number</span></td>
+                                <td>@item.ClientName</td>
+                                <td>@item.IssueDate?.ToString("yyyy-MM-dd")</td>
+                                <td class="text-success fw-bold">@((item.Quantity * item.UnitPrice).ToString("C"))</td>
+                                <td>
+                                    <a asp-controller="Invoices" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary"><i class="bi bi-pencil-square"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">لا توجد فواتير لعرضها حالياً</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
