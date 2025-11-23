@@ -1,0 +1,57 @@
+﻿@model List<Invoice>
+@{
+    int totalPages = ViewBag.TotalPages ?? 1;
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    
+}
+    <h1 class="text-center"><strong>Invoice List</strong></h1>
+
+<a class="btn btn-primary mb-1" asp-controller="Invoices" asp-action="Create">Create New Invoice</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Number</th>
+                <th>IssueDate</th>
+                <th>DueDate</th>
+                <th>Service</th>
+                <th>TotalPrice</th>
+                
+                <th>ClientName</th>
+               
+                <th>Actions</th>
+            </tr>
+        </thead>
+    <tbody class="table-group-divider">
+        
+        @foreach (var invoice in Model)
+        {
+            decimal totalPrice = invoice.Quantity * invoice.UnitPrice;
+            <tr>
+                <td>@invoice.Id</td>
+                <td>@invoice.Number</td>
+                <td>@invoice.IssueDate</td>
+                <td>@invoice.DueDate</td>
+                <td>@invoice.Service</td>
+                <td>@(totalPrice)$</td>
+                <td>@invoice.ClientName</td>
+                <td style="white-space: nowrap;">
+                    <a class="btn btn-primary" asp-controller="Invoices" asp-action="Edit" asp-route-id="@invoice.Id">Edit</a>
+                    <a class="btn btn-danger" asp-controller="Invoices" asp-action="Delete" asp-route-id="@invoice.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+    </table>
+<nav>
+    <ul class="pagination justify-content-center">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+    
